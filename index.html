@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Farooq Ahmed — Python Developer & Data Analyst</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:      #060910;
+  --bg2:     #0c1018;
+  --surface: #111620;
+  --surface2:#161d2a;
+  --border:  #1c2535;
+  --border2: #243040;
+  --accent:  #00e5b0;
+  --accent2: #f5a623;
+  --accent3: #7c6aff;
+  --text:    #d4dff5;
+  --muted:   #5a6882;
+  --muted2:  #8896b0;
+  --mono:    'JetBrains Mono', monospace;
+  --sans:    'Syne', sans-serif;
+  --space:   'Space Mono', monospace;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);font-size:15px;line-height:1.75;overflow-x:hidden;cursor:none}
+
+/* ── CUSTOM CURSOR ── */
+#cursor{position:fixed;width:12px;height:12px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .1s,background .2s;mix-blend-mode:screen}
+#cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(0,229,176,.4);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:left .12s ease,top .12s ease,width .2s,height .2s,border-color .2s}
+body:hover #cursor{opacity:1}
+a:hover~#cursor,button:hover~#cursor{transform:translate(-50%,-50%) scale(2.2);background:var(--accent2)}
+
+/* ── SCROLL PROGRESS ── */
+#progress-bar{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent3));z-index:1000;transition:width .1s linear;width:0}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--accent);border-radius:2px}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:.9rem 3rem;display:flex;align-items:center;justify-content:space-between;background:rgba(6,9,16,.8);backdrop-filter:blur(20px);border-bottom:1px solid rgba(28,37,53,.6)}
+.nav-logo{font-family:var(--sans);font-size:1.05rem;font-weight:800;color:var(--accent);letter-spacing:.5px;text-decoration:none}
+.nav-logo span{color:var(--text)}
+.nav-links{display:flex;gap:2.2rem;list-style:none}
+.nav-links a{color:var(--muted2);text-decoration:none;font-size:.72rem;letter-spacing:2px;text-transform:uppercase;transition:color .2s;position:relative;padding-bottom:3px}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--accent);transition:width .25s}
+.nav-links a:hover{color:var(--accent)}
+.nav-links a:hover::after{width:100%}
+.nav-cta{padding:.45rem 1.1rem;background:transparent;border:1px solid var(--accent);color:var(--accent);border-radius:3px;font-family:var(--mono);font-size:.72rem;letter-spacing:1px;text-decoration:none;transition:all .2s}
+.nav-cta:hover{background:var(--accent);color:#060910}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:.3rem}
+.hamburger span{display:block;width:22px;height:2px;background:var(--text);transition:all .3s}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.mobile-menu{display:none;position:fixed;inset:0;background:rgba(6,9,16,.98);z-index:499;flex-direction:column;align-items:center;justify-content:center;gap:2.5rem}
+.mobile-menu.open{display:flex}
+.mobile-menu a{color:var(--text);text-decoration:none;font-family:var(--sans);font-size:1.8rem;font-weight:700;transition:color .2s}
+.mobile-menu a:hover{color:var(--accent)}
+
+/* ── HERO ── */
+#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:8rem 3rem 5rem;position:relative;overflow:hidden}
+#hero-canvas{position:absolute;inset:0;pointer-events:none}
+.hero-content{position:relative;z-index:2;max-width:900px}
+.hero-pre{font-size:.7rem;color:var(--accent);letter-spacing:4px;text-transform:uppercase;margin-bottom:1.5rem;opacity:0;animation:slideUp .7s .2s forwards}
+.hero-pre span{display:inline-block;width:28px;height:1px;background:var(--accent);vertical-align:middle;margin-right:10px}
+.hero-name{font-family:var(--sans);font-size:clamp(3.5rem,9vw,7.5rem);font-weight:800;line-height:.95;color:#fff;opacity:0;animation:slideUp .7s .35s forwards}
+.hero-name .accent-text{background:linear-gradient(135deg,var(--accent) 0%,var(--accent2) 60%,var(--accent3) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-roles{margin-top:1.5rem;font-family:var(--space);font-size:clamp(.8rem,2vw,1rem);color:var(--muted2);opacity:0;animation:slideUp .7s .5s forwards}
+.hero-roles .typed-text{color:var(--accent);font-style:italic}
+.hero-roles .cursor-blink{display:inline-block;color:var(--accent);animation:blink 1s infinite}
+.hero-desc{margin-top:1.8rem;max-width:520px;color:var(--muted2);font-size:.87rem;line-height:1.85;opacity:0;animation:slideUp .7s .65s forwards;border-left:2px solid var(--border2);padding-left:1.2rem}
+.hero-btns{margin-top:2.5rem;display:flex;flex-wrap:wrap;gap:1rem;opacity:0;animation:slideUp .7s .8s forwards}
+.btn-fill{padding:.7rem 1.8rem;background:var(--accent);color:#060910;font-family:var(--mono);font-size:.78rem;font-weight:700;letter-spacing:1.5px;border:none;border-radius:3px;text-decoration:none;cursor:pointer;transition:all .25s;text-transform:uppercase}
+.btn-fill:hover{background:#00ffcc;box-shadow:0 0 30px rgba(0,229,176,.4),0 0 60px rgba(0,229,176,.15);transform:translateY(-2px)}
+.btn-outline{padding:.7rem 1.8rem;background:transparent;color:var(--text);font-family:var(--mono);font-size:.78rem;letter-spacing:1.5px;border:1px solid var(--border2);border-radius:3px;text-decoration:none;transition:all .25s;text-transform:uppercase}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+.hero-status{position:absolute;bottom:3rem;right:3rem;text-align:right;opacity:0;animation:slideUp .7s 1s forwards}
+.hero-status .status-dot{display:inline-block;width:8px;height:8px;background:#22c55e;border-radius:50%;margin-right:7px;animation:statusPulse 2s infinite;box-shadow:0 0 8px #22c55e}
+.hero-status p{font-size:.72rem;color:var(--muted2);line-height:2}
+.hero-scroll{position:absolute;bottom:3rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.4rem;opacity:0;animation:slideUp .7s 1.1s forwards}
+.hero-scroll span{font-size:.62rem;letter-spacing:3px;color:var(--muted);text-transform:uppercase}
+.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--accent),transparent);animation:scrollAnim 1.8s ease-in-out infinite}
+
+/* ── STATS ── */
+#stats{padding:4rem 3rem;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg2)}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;max-width:900px;margin:0 auto}
+.stat-item{text-align:center}
+.stat-num{font-family:var(--sans);font-size:2.8rem;font-weight:800;color:#fff;line-height:1}
+.stat-num .stat-accent{color:var(--accent)}
+.stat-label{font-size:.7rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:.4rem}
+
+/* ── SECTION BASE ── */
+section{padding:6rem 3rem;border-bottom:1px solid var(--border)}
+.section-eyebrow{font-size:.67rem;color:var(--accent);letter-spacing:4px;text-transform:uppercase;margin-bottom:.7rem;display:flex;align-items:center;gap:.7rem}
+.section-eyebrow::after{content:'';flex:1;height:1px;background:var(--border2);max-width:60px}
+.section-title{font-family:var(--sans);font-size:clamp(2rem,4.5vw,3rem);font-weight:800;color:#fff;margin-bottom:3rem;line-height:1.1}
+.section-title em{font-style:normal;color:var(--accent)}
+
+/* ── ABOUT ── */
+.about-layout{display:grid;grid-template-columns:auto 1fr;gap:4.5rem;align-items:start}
+.about-img-col{position:relative;flex-shrink:0}
+.about-img-frame{width:260px;height:300px;position:relative}
+.about-img-frame img{width:100%;height:100%;object-fit:cover;border-radius:6px;filter:grayscale(20%) contrast(1.05);display:block}
+.about-img-frame::before{content:'';position:absolute;inset:-8px 8px 8px -8px;border:1px solid var(--accent);border-radius:6px;z-index:-1;opacity:.5}
+.about-img-frame::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 60%,rgba(0,229,176,.08));border-radius:6px}
+.about-badge{position:absolute;bottom:-18px;right:-18px;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;padding:.7rem 1rem;font-size:.72rem;color:var(--text);z-index:2;white-space:nowrap}
+.about-badge strong{display:block;font-family:var(--sans);font-size:1.1rem;font-weight:800;color:var(--accent);line-height:1}
+.about-text p{color:var(--muted2);font-size:.88rem;margin-bottom:1.2rem;line-height:1.9}
+.about-quote{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--accent);padding:1.2rem 1.5rem;border-radius:0 6px 6px 0;margin-bottom:1.5rem;font-style:italic;font-size:.85rem;color:var(--text)}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
+.chip{display:inline-flex;align-items:center;gap:.4rem;background:var(--surface);border:1px solid var(--border2);padding:.35rem .8rem;border-radius:3px;font-size:.75rem;color:var(--muted2)}
+.chip .ci{font-size:.85rem}
+
+/* ── PROJECTS ── */
+.projects-filter{display:flex;gap:.5rem;margin-bottom:2.5rem;flex-wrap:wrap}
+.filter-btn{padding:.35rem .9rem;background:transparent;border:1px solid var(--border2);color:var(--muted2);font-family:var(--mono);font-size:.72rem;letter-spacing:1px;border-radius:3px;cursor:pointer;transition:all .2s}
+.filter-btn:hover,.filter-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(0,229,176,.06)}
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem}
+.project-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.8rem;position:relative;overflow:hidden;transition:border-color .25s,transform .3s;cursor:default}
+.project-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0;transition:opacity .3s}
+.project-card:hover{border-color:rgba(0,229,176,.35);transform:translateY(-5px)}
+.project-card:hover::before{opacity:1}
+.project-card .card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.1rem}
+.project-num{font-size:.65rem;color:var(--accent);letter-spacing:3px;font-family:var(--space)}
+.project-icon{font-size:1.4rem}
+.project-card h3{font-family:var(--sans);font-size:1rem;font-weight:700;color:#fff;margin-bottom:.65rem}
+.project-card p{color:var(--muted2);font-size:.8rem;line-height:1.75}
+.project-tags{margin-top:1.2rem;display:flex;flex-wrap:wrap;gap:.35rem}
+.ptag{font-size:.65rem;padding:.2rem .6rem;background:rgba(0,229,176,.06);color:var(--accent);border:1px solid rgba(0,229,176,.18);border-radius:2px;letter-spacing:.3px}
+.ptag.orange{background:rgba(245,166,35,.06);color:var(--accent2);border-color:rgba(245,166,35,.2)}
+.ptag.purple{background:rgba(124,106,255,.06);color:var(--accent3);border-color:rgba(124,106,255,.2)}
+.project-links{margin-top:1.3rem;display:flex;gap:.6rem}
+.plink{display:inline-flex;align-items:center;gap:.4rem;font-size:.72rem;color:var(--muted2);text-decoration:none;transition:color .2s;padding:.25rem 0}
+.plink:hover{color:var(--accent)}
+.plink svg{width:13px;height:13px;fill:currentColor}
+
+/* ── SKILLS ── */
+.skills-layout{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem}
+.skill-category h3{font-family:var(--sans);font-size:.85rem;font-weight:700;color:var(--accent2);letter-spacing:2px;text-transform:uppercase;margin-bottom:1.4rem;display:flex;align-items:center;gap:.7rem}
+.skill-category h3::after{content:'';flex:1;height:1px;background:var(--border2)}
+.skill-bars{display:flex;flex-direction:column;gap:1.1rem}
+.skill-bar-item{}
+.skill-bar-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.45rem}
+.skill-bar-name{font-size:.78rem;color:var(--text)}
+.skill-bar-pct{font-size:.7rem;color:var(--accent);font-family:var(--space)}
+.skill-track{height:3px;background:var(--border2);border-radius:2px;overflow:hidden}
+.skill-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;width:0;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+.skill-fill.purple-fill{background:linear-gradient(90deg,var(--accent3),var(--accent))}
+.tools-grid{margin-top:2rem;display:flex;flex-wrap:wrap;gap:.5rem}
+.tool-badge{padding:.4rem .85rem;background:var(--surface);border:1px solid var(--border2);border-radius:3px;font-size:.74rem;color:var(--muted2);transition:all .2s;cursor:default}
+.tool-badge:hover{border-color:var(--accent3);color:var(--accent3)}
+
+/* ── CERTIFICATIONS ── */
+#certifications{background:var(--bg2)}
+.certs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem}
+.cert-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.6rem;position:relative;overflow:hidden;transition:border-color .25s,transform .25s}
+.cert-card:hover{border-color:rgba(0,229,176,.35);transform:translateY(-4px)}
+.cert-card::after{content:'✓ VERIFIED';position:absolute;top:1rem;right:1rem;font-size:.58rem;letter-spacing:2px;color:var(--accent);border:1px solid rgba(0,229,176,.3);padding:.15rem .5rem;border-radius:2px}
+.cert-issuer-row{display:flex;align-items:center;gap:.8rem;margin-bottom:1.2rem}
+.cert-issuer-icon{width:42px;height:42px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.cert-issuer-icon.cisco{background:rgba(28,97,207,.15);border:1px solid rgba(28,97,207,.25)}
+.cert-issuer-icon.anthropic{background:rgba(205,163,100,.1);border:1px solid rgba(205,163,100,.2)}
+.cert-issuer-icon.aixx{background:rgba(0,229,176,.08);border:1px solid rgba(0,229,176,.2)}
+.cert-name{font-family:var(--sans);font-size:1rem;font-weight:700;color:#fff;margin-bottom:.35rem}
+.cert-issuer{font-size:.75rem;color:var(--muted2)}
+.cert-date{margin-top:.9rem;padding-top:.9rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:.72rem;color:var(--muted)}
+.cert-date .cert-badge-text{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:700;font-family:var(--space)}
+.cert-skills{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.8rem}
+.cert-skill-tag{font-size:.65rem;padding:.15rem .5rem;background:rgba(124,106,255,.08);color:var(--accent3);border:1px solid rgba(124,106,255,.2);border-radius:2px}
+
+/* ── CONTACT ── */
+.contact-layout{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start}
+.contact-left h3{font-family:var(--sans);font-size:1.6rem;font-weight:800;color:#fff;margin-bottom:1rem}
+.contact-left p{color:var(--muted2);font-size:.87rem;line-height:1.85;margin-bottom:1.5rem}
+.contact-detail{display:flex;align-items:center;gap:.8rem;margin-bottom:.85rem;font-size:.82rem;color:var(--text)}
+.contact-detail .cd-icon{font-size:1rem;width:20px;flex-shrink:0}
+.contact-detail a{color:var(--accent);text-decoration:none}
+.contact-detail a:hover{text-decoration:underline}
+.social-row{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:2rem}
+.social-link{display:inline-flex;align-items:center;gap:.5rem;padding:.55rem 1.1rem;background:var(--surface);border:1px solid var(--border2);border-radius:5px;text-decoration:none;color:var(--muted2);font-size:.77rem;transition:all .2s}
+.social-link:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+.contact-terminal{background:var(--bg);border:1px solid var(--border2);border-radius:8px;overflow:hidden;font-family:var(--mono);font-size:.8rem}
+.terminal-bar{background:var(--surface2);padding:.6rem 1rem;display:flex;align-items:center;gap:.5rem}
+.tbar-dot{width:10px;height:10px;border-radius:50%}
+.tbar-dot.red{background:#ff5f57}
+.tbar-dot.yellow{background:#ffbd2e}
+.tbar-dot.green{background:#28c840}
+.terminal-title{margin-left:.5rem;font-size:.7rem;color:var(--muted);flex:1;text-align:center}
+.terminal-body{padding:1.5rem}
+.tline{line-height:2;display:flex;gap:.5rem;flex-wrap:wrap}
+.tprompt{color:var(--accent)}
+.tcmd{color:#fff}
+.tstr{color:#a8c7fa}
+.tcomment{color:var(--muted)}
+.tkey{color:var(--accent2)}
+.tval{color:#c3e88d}
+.tbool{color:#f78c6c}
+.tbrace{color:var(--muted2)}
+
+/* ── FOOTER ── */
+footer{padding:2.5rem 3rem;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1rem;background:var(--bg2);border-top:1px solid var(--border)}
+.footer-brand{font-family:var(--sans);font-size:.95rem;font-weight:800;color:var(--accent)}
+footer p{font-size:.73rem;color:var(--muted)}
+.footer-links{display:flex;gap:1.5rem}
+.footer-links a{color:var(--muted);text-decoration:none;font-size:.73rem;transition:color .2s}
+.footer-links a:hover{color:var(--accent)}
+.footer-heart{color:var(--danger,#ff6e6e)}
+
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .65s,transform .65s}
+.reveal.visible{opacity:1;transform:none}
+.reveal-left{opacity:0;transform:translateX(-28px);transition:opacity .65s,transform .65s}
+.reveal-left.visible{opacity:1;transform:none}
+.reveal-right{opacity:0;transform:translateX(28px);transition:opacity .65s,transform .65s}
+.reveal-right.visible{opacity:1;transform:none}
+
+/* ── ANIMATIONS ── */
+@keyframes slideUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes statusPulse{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.4)}70%{box-shadow:0 0 0 8px rgba(34,197,94,0)}}
+@keyframes scrollAnim{0%,100%{opacity:1;transform:scaleY(1) translateY(0)}50%{opacity:.4;transform:scaleY(.6) translateY(8px)}}
+@keyframes floatParticle{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-20px) rotate(180deg)}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .about-layout{grid-template-columns:1fr;gap:3rem}
+  .about-img-frame{width:100%;height:240px}
+  .skills-layout{grid-template-columns:1fr;gap:2rem}
+  .contact-layout{grid-template-columns:1fr;gap:3rem}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:700px){
+  nav{padding:.8rem 1.5rem}
+  section,#stats{padding:4rem 1.5rem}
+  #hero{padding:7rem 1.5rem 4rem}
+  .nav-links,.nav-cta{display:none}
+  .hamburger{display:flex}
+  .projects-grid{grid-template-columns:1fr}
+  .certs-grid{grid-template-columns:1fr}
+  footer{padding:1.8rem 1.5rem}
+  .hero-status{bottom:1.5rem;right:1.5rem}
+  .hero-scroll{display:none}
+}
+@media(min-width:701px){.mobile-menu{display:none!important}}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<div id="progress-bar"></div>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" onclick="closeMobile()">About</a>
+  <a href="#projects" onclick="closeMobile()">Projects</a>
+  <a href="#skills" onclick="closeMobile()">Skills</a>
+  <a href="#certifications" onclick="closeMobile()">Certs</a>
+  <a href="#contact" onclick="closeMobile()">Contact</a>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#hero">FA<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#certifications">Certs</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a class="nav-cta" href="#contact">Hire Me</a>
+  <div class="hamburger" id="hamburger" onclick="toggleMobile()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-content">
+    <p class="hero-pre"><span></span>Available for opportunities</p>
+    <h1 class="hero-name">Farooq<br><span class="accent-text">Ahmed</span></h1>
+    <p class="hero-roles">
+      <span style="color:var(--muted2)">// </span>
+      <span class="typed-text" id="typed"></span><span class="cursor-blink">|</span>
+    </p>
+    <p class="hero-desc">
+      Python developer from Jamshoro, Pakistan — specializing in automation, data analysis, and OOP.
+      Cisco-certified &amp; Anthropic-trained. Building tools that solve real problems, one commit at a time.
+    </p>
+    <div class="hero-btns">
+      <a href="#projects" class="btn-fill">View Projects</a>
+      <a href="https://github.com/farooqchanna" target="_blank" class="btn-outline">⌥ GitHub</a>
+      <a href="#contact" class="btn-outline">Get in Touch</a>
+    </div>
+  </div>
+  <div class="hero-status">
+    <p><span class="status-dot"></span>Open to work</p>
+    <p>📍 Jamshoro, Pakistan</p>
+    <p>🐍 Python Developer</p>
+  </div>
+  <div class="hero-scroll">
+    <span>scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div id="stats">
+  <div class="stats-grid">
+    <div class="stat-item reveal">
+      <div class="stat-num"><span class="counter" data-target="7">0</span><span class="stat-accent">+</span></div>
+      <div class="stat-label">Projects Built</div>
+    </div>
+    <div class="stat-item reveal">
+      <div class="stat-num"><span class="counter" data-target="4">0</span><span class="stat-accent">+</span></div>
+      <div class="stat-label">Certifications</div>
+    </div>
+    <div class="stat-item reveal">
+      <div class="stat-num"><span class="counter" data-target="3">0</span><span class="stat-accent">+</span></div>
+      <div class="stat-label">Tech Issuers</div>
+    </div>
+    <div class="stat-item reveal">
+      <div class="stat-num"><span class="counter" data-target="500">0</span><span class="stat-accent">+</span></div>
+      <div class="stat-label">Lines of Code</div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <p class="section-eyebrow reveal">01 — About Me</p>
+  <h2 class="section-title reveal">Who I <em>Am</em></h2>
+  <div class="about-layout">
+    <div class="about-img-col reveal-left">
+      <div class="about-img-frame">
+        <img src="https://avatars.githubusercontent.com/u/241768879?v=4" alt="Farooq Ahmed"/>
+      </div>
+      <div class="about-badge">
+        <strong>@farooqchanna</strong>
+        GitHub Profile
+      </div>
+    </div>
+    <div class="about-text reveal-right">
+      <div class="about-quote">
+        "My goal is to become a skilled programmer who builds efficient, scalable, and user-friendly
+        software solutions — continuously learning new technologies, improving problem-solving abilities,
+        and one day contributing to projects that actually matter."
+      </div>
+      <p>
+        I'm <strong style="color:var(--text)">Farooq Ahmed</strong> — a Python developer from
+        <strong style="color:var(--text)">Jamshoro, Sindh, Pakistan</strong>, currently on a focused
+        journey to master software development and data science. I started programming because I wanted
+        to stop doing repetitive tasks manually and start building things that work on their own — and
+        that curiosity never left.
+      </p>
+      <p>
+        My career path began with <strong style="color:var(--text)">SMIT (Saylani Mass IT Training)</strong>,
+        where I trained intensively in Python, data analysis, and object-oriented programming. From writing
+        my first loop to building full OOP systems with inheritance, designing data-cleaning pipelines with
+        Pandas, and earning certifications from <strong style="color:var(--text)">Cisco</strong>,
+        <strong style="color:var(--text)">AI IXX</strong>, and <strong style="color:var(--text)">Anthropic</strong>
+        — every step has been deliberate.
+      </p>
+      <p>
+        Right now I'm focused on <strong style="color:var(--text)">automation, data analysis, and web development</strong>.
+        I enjoy the problem-solving side of programming — taking a messy dataset or a slow manual workflow and turning
+        it into something clean, fast, and reliable. Long-term, I want to work on real-world data and AI-driven projects
+        that solve meaningful problems for people.
+      </p>
+      <div class="chips">
+        <span class="chip"><span class="ci">👤</span> Farooq Ahmed</span>
+        <span class="chip"><span class="ci">📍</span> Jamshoro, Pakistan</span>
+        <span class="chip"><span class="ci">🎓</span> SMIT Trained</span>
+        <span class="chip"><span class="ci">🏅</span> Cisco Certified</span>
+        <span class="chip"><span class="ci">🤖</span> Anthropic Certified</span>
+        <span class="chip"><span class="ci">💼</span> Open to Work</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <p class="section-eyebrow reveal">02 — Work</p>
+  <h2 class="section-title reveal">Featured <em>Projects</em></h2>
+  <div class="projects-filter reveal">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="automation">Automation</button>
+    <button class="filter-btn" data-filter="data">Data & ML</button>
+    <button class="filter-btn" data-filter="oop">OOP</button>
+  </div>
+  <div class="projects-grid">
+
+    <div class="project-card reveal" data-cat="automation">
+      <div class="card-top">
+        <span class="project-num">P — 01</span>
+        <span class="project-icon">📁</span>
+      </div>
+      <h3>File Sorting Automation</h3>
+      <p>Automates file organization by extension — PDFs, docs, images — moved into appropriately named folders. Uses Python's os and shutil modules for fast, reliable batch sorting.</p>
+      <div class="project-tags">
+        <span class="ptag">Python</span>
+        <span class="ptag">os</span>
+        <span class="ptag">shutil</span>
+        <span class="ptag orange">Automation</span>
+      </div>
+      <div class="project-links">
+        <a class="plink" href="https://github.com/farooqchanna/Smit" target="_blank">
+          <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          Source Code
+        </a>
+      </div>
+    </div>
+
+    <div class="project-card reveal" data-cat="oop">
+      <div class="card-top">
+        <span class="project-num">P — 02</span>
+        <span class="project-icon">🏢</span>
+      </div>
+      <h3>Employee Management System</h3>
+      <p>OOP-based employee payroll system with inheritance — full-time, part-time, and contractor classes. Each type calculates salary differently using polymorphism and base class abstraction.</p>
+      <div class="project-tags">
+        <span class="ptag">Python</span>
+        <span class="ptag orange">OOP</span>
+        <span class="ptag orange">Inheritance</span>
+        <span class="ptag">Classes</span>
+      </div>
+      <div class="project-links">
+        <a class="plink" href="https://github.com/farooqchanna/Smit/blob/master/assignment_employee.py" target="_blank">
+          <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          View Code
+        </a>
+      </div>
+    </div>
+
+    <div class="project-card reveal" data-cat="data">
+      <div class="card-top">
+        <span class="project-num">P — 03</span>
+        <span class="project-icon">🛒</span>
+      </div>
+      <h3>E-Commerce Data Analysis</h3>
+      <p>Jupyter Notebook analysis of e-commerce datasets using Pandas — exploratory data analysis, aggregations, group-by operations, and insights extraction from sales and product data.</p>
+      <div class="project-tags">
+        <span class="ptag">Python</span>
+        <span class="ptag purple">Pandas</span>
+        <span class="ptag purple">Jupyter</span>
+        <span class="ptag orange">EDA</span>
+      </div>
+      <div class="project-links">
+        <a class="plink" href="https://github.com/farooqchanna/Smit/blob/master/assignmet_panda_ecommerce.ipynb" target="_blank">
+          <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          View Notebook
+        </a>
+      </div>
+    </div>
+
+    <div class="project-card reveal" data-cat="data">
+      <div class="card-top">
+        <span class="project-num">P — 04</span>
+        <span class="project-icon">🔢</span>
+      </div>
+      <h3>NumPy Data Analysis</h3>
+      <p>Array-based data analysis with NumPy — mathematical operations, array manipulation, statistical computations, and broadcasting techniques applied to structured datasets.</p>
+      <div class="project-tags">
+        <span class="ptag">Python</span>
+        <span class="ptag purple">NumPy</span>
+        <span class="ptag purple">Jupyter</span>
+        <span class="ptag orange">Statistics</span>
+      </div>
+      <div class="project-links">
+        <a class="plink" href="https://github.com/farooqchanna/Smit/blob/master/num%20assignment.ipynb" target="_blank">
+          <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          View Notebook
+        </a>
+      </div>
+    </div>
+
+    <div class="project-card reveal" data-cat="oop">
+      <div class="card-top">
+        <span class="project-num">P — 05</span>
+        <span class="project-icon">💰</span>
+      </div>
+      <h3>Expense Tracker</h3>
+      <p>A Python CLI application to log, categorize, and track personal or business expenses. Supports adding, viewing, and summarizing spending with persistent file-based storage.</p>
+      <div class="project-tags">
+        <span class="ptag">Python</span>
+        <span class="ptag orange">CLI</span>
+        <span class="ptag">File I/O</span>
+        <span class="ptag">Budgeting</span>
+      </div>
+      <div class="project-links">
+        <a class="plink" href="https://github.com/farooqchanna/Smit/blob/master/expense.py" target="_blank">
+          <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          View Code
+        </a>
+      </div>
+    </div>
+
+    <div class="project-card reveal" data-cat="data">
+      <div class="card-top">
+        <span class="project-num">P — 06</span>
+        <span class="project-icon">🧹</span>
+      </div>
+      <h3>Data Cleaning Pipeline</h3>
+      <p>Cleans raw student datasets for analysis — drops null rows, fills missing values with mean/median, applies value_counts, and outputs analysis-ready CSV using Pandas.</p>
+      <div class="project-tags">
+        <span class="ptag">Python</span>
+        <span class="ptag purple">Pandas</span>
+        <span class="ptag orange">Data Cleaning</span>
+        <span class="ptag">CSV</span>
+      </div>
+    </div>
+
+    <div class="project-card reveal" data-cat="oop">
+      <div class="card-top">
+        <span class="project-num">P — 07</span>
+        <span class="project-icon">🎓</span>
+      </div>
+      <h3>Student Management System</h3>
+      <p>A full CLI CRUD system for managing university student records — ID, name, father name, DOB, class — persisted to CSV. Supports add, modify, delete, and search operations.</p>
+      <div class="project-tags">
+        <span class="ptag">Python</span>
+        <span class="ptag orange">CRUD</span>
+        <span class="ptag">CSV</span>
+        <span class="ptag">File I/O</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <p class="section-eyebrow reveal">03 — Expertise</p>
+  <h2 class="section-title reveal">Technical <em>Skills</em></h2>
+  <div class="skills-layout">
+    <div>
+      <div class="skill-category reveal">
+        <h3>Python Ecosystem</h3>
+        <div class="skill-bars">
+          <div class="skill-bar-item">
+            <div class="skill-bar-header"><span class="skill-bar-name">Core Python & OOP</span><span class="skill-bar-pct">88%</span></div>
+            <div class="skill-track"><div class="skill-fill" data-width="88"></div></div>
+          </div>
+          <div class="skill-bar-item">
+            <div class="skill-bar-header"><span class="skill-bar-name">Pandas</span><span class="skill-bar-pct">82%</span></div>
+            <div class="skill-track"><div class="skill-fill" data-width="82"></div></div>
+          </div>
+          <div class="skill-bar-item">
+            <div class="skill-bar-header"><span class="skill-bar-name">NumPy</span><span class="skill-bar-pct">78%</span></div>
+            <div class="skill-track"><div class="skill-fill" data-width="78"></div></div>
+          </div>
+          <div class="skill-bar-item">
+            <div class="skill-bar-header"><span class="skill-bar-name">Data Visualization</span><span class="skill-bar-pct">70%</span></div>
+            <div class="skill-track"><div class="skill-fill" data-width="70"></div></div>
+          </div>
+          <div class="skill-bar-item">
+            <div class="skill-bar-header"><span class="skill-bar-name">File Automation (os/shutil)</span><span class="skill-bar-pct">90%</span></div>
+            <div class="skill-track"><div class="skill-fill" data-width="90"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="skill-category reveal">
+        <h3>Web & Tools</h3>
+        <div class="skill-bars">
+          <div class="skill-bar-item">
+            <div class="skill-bar-header"><span class="skill-bar-name">HTML5</span><span class="skill-bar-pct">75%</span></div>
+            <div class="skill-track"><div class="skill-fill purple-fill" data-width="75"></div></div>
+          </div>
+          <div class="skill-bar-item">
+            <div class="skill-bar-header"><span class="skill-bar-name">CSS3</span><span class="skill-bar-pct">58%</span></div>
+            <div class="skill-track"><div class="skill-fill purple-fill" data-width="58"></div></div>
+          </div>
+          <div class="skill-bar-item">
+            <div class="skill-bar-header"><span class="skill-bar-name">Jupyter Notebooks</span><span class="skill-bar-pct">84%</span></div>
+            <div class="skill-track"><div class="skill-fill purple-fill" data-width="84"></div></div>
+          </div>
+          <div class="skill-bar-item">
+            <div class="skill-bar-header"><span class="skill-bar-name">Git & GitHub</span><span class="skill-bar-pct">72%</span></div>
+            <div class="skill-track"><div class="skill-fill purple-fill" data-width="72"></div></div>
+          </div>
+          <div class="skill-bar-item">
+            <div class="skill-bar-header"><span class="skill-bar-name">Claude Code / AI Tools</span><span class="skill-bar-pct">80%</span></div>
+            <div class="skill-track"><div class="skill-fill purple-fill" data-width="80"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="reveal" style="margin-top:2.5rem">
+    <div class="skill-category">
+      <h3>Technologies & Libraries</h3>
+    </div>
+    <div class="tools-grid">
+      <span class="tool-badge">Python 3.x</span>
+      <span class="tool-badge">Pandas</span>
+      <span class="tool-badge">NumPy</span>
+      <span class="tool-badge">Matplotlib</span>
+      <span class="tool-badge">Jupyter</span>
+      <span class="tool-badge">VS Code</span>
+      <span class="tool-badge">Git</span>
+      <span class="tool-badge">GitHub</span>
+      <span class="tool-badge">HTML5</span>
+      <span class="tool-badge">CSS3</span>
+      <span class="tool-badge">CSV / JSON</span>
+      <span class="tool-badge">OOP</span>
+      <span class="tool-badge">os / shutil</span>
+      <span class="tool-badge">Claude Code</span>
+      <span class="tool-badge">Data Cleaning</span>
+      <span class="tool-badge">File Automation</span>
+    </div>
+  </div>
+</section>
+
+<!-- CERTIFICATIONS -->
+<section id="certifications">
+  <p class="section-eyebrow reveal">04 — Credentials</p>
+  <h2 class="section-title reveal">Certifi<em>cations</em></h2>
+  <div class="certs-grid">
+
+    <div class="cert-card reveal">
+      <div class="cert-issuer-row">
+        <div class="cert-issuer-icon cisco">🔵</div>
+        <div>
+          <div style="font-size:.65rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:.2rem">Cisco</div>
+          <div style="font-size:.78rem;font-weight:700;color:var(--text)">Python Essentials 1</div>
+        </div>
+      </div>
+      <div class="cert-name">Python Essentials 1</div>
+      <div class="cert-issuer">Issued by Cisco Networking Academy</div>
+      <div class="cert-skills">
+        <span class="cert-skill-tag">Python Basics</span>
+        <span class="cert-skill-tag">Variables & Types</span>
+        <span class="cert-skill-tag">Control Flow</span>
+        <span class="cert-skill-tag">Functions</span>
+      </div>
+      <div class="cert-date">
+        <span>📅 December 2025</span>
+        <span class="cert-badge-text">CISCO</span>
+      </div>
+    </div>
+
+    <div class="cert-card reveal">
+      <div class="cert-issuer-row">
+        <div class="cert-issuer-icon cisco">🔵</div>
+        <div>
+          <div style="font-size:.65rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:.2rem">Cisco</div>
+          <div style="font-size:.78rem;font-weight:700;color:var(--text)">Python Essentials 2</div>
+        </div>
+      </div>
+      <div class="cert-name">Python Essentials 2</div>
+      <div class="cert-issuer">Issued by Cisco Networking Academy</div>
+      <div class="cert-skills">
+        <span class="cert-skill-tag">Data Analysis</span>
+        <span class="cert-skill-tag">OOP</span>
+        <span class="cert-skill-tag">Modules</span>
+        <span class="cert-skill-tag">File Handling</span>
+      </div>
+      <div class="cert-date">
+        <span>📅 December 2025</span>
+        <span class="cert-badge-text">CISCO</span>
+      </div>
+    </div>
+
+    <div class="cert-card reveal">
+      <div class="cert-issuer-row">
+        <div class="cert-issuer-icon aixx">🤖</div>
+        <div>
+          <div style="font-size:.65rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:.2rem">AI IXX</div>
+          <div style="font-size:.78rem;font-weight:700;color:var(--text)">Python for AI</div>
+        </div>
+      </div>
+      <div class="cert-name">Python for AI</div>
+      <div class="cert-issuer">Issued by AI IXX</div>
+      <div class="cert-skills">
+        <span class="cert-skill-tag">Pandas</span>
+        <span class="cert-skill-tag">Data Analysis</span>
+        <span class="cert-skill-tag">AI Foundations</span>
+        <span class="cert-skill-tag">ML Concepts</span>
+      </div>
+      <div class="cert-date">
+        <span>📅 May 2026</span>
+        <span class="cert-badge-text">AI IXX</span>
+      </div>
+    </div>
+
+    <div class="cert-card reveal" style="border-color:rgba(205,163,100,.25)">
+      <div class="cert-issuer-row">
+        <div class="cert-issuer-icon anthropic">🔶</div>
+        <div>
+          <div style="font-size:.65rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:.2rem">Anthropic Education</div>
+          <div style="font-size:.78rem;font-weight:700;color:var(--text)">Claude Code 101</div>
+        </div>
+      </div>
+      <div class="cert-name">Claude Code 101</div>
+      <div class="cert-issuer">Offered by Anthropic Education</div>
+      <div class="cert-skills">
+        <span class="cert-skill-tag">AI-Assisted Coding</span>
+        <span class="cert-skill-tag">Claude Code CLI</span>
+        <span class="cert-skill-tag">Agentic Dev</span>
+        <span class="cert-skill-tag">Prompt Engineering</span>
+      </div>
+      <div class="cert-date">
+        <span>📅 May 23, 2026</span>
+        <span class="cert-badge-text" style="background:linear-gradient(135deg,#cd9e64,var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent">ANTHROPIC</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <p class="section-eyebrow reveal">05 — Contact</p>
+  <h2 class="section-title reveal">Let's <em>Connect</em></h2>
+  <div class="contact-layout">
+    <div class="reveal-left">
+      <h3>Open to Opportunities</h3>
+      <p>I'm actively looking for roles in Python development, data analysis, and automation. Whether it's a full-time role, freelance project, or just a conversation — I'm all ears.</p>
+      <div class="contact-detail">
+        <span class="cd-icon">📍</span>
+        <span>Jamshoro, Sindh, Pakistan</span>
+      </div>
+      <div class="contact-detail">
+        <span class="cd-icon">💼</span>
+        <span>Available for full-time & freelance</span>
+      </div>
+      <div class="contact-detail">
+        <span class="cd-icon">🐍</span>
+        <span>Python · Data · Automation · OOP</span>
+      </div>
+      <div class="social-row">
+        <a class="social-link" href="https://github.com/farooqchanna" target="_blank">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </a>
+        <a class="social-link" href="https://www.linkedin.com/in/farooq-ahmed-1b310a193" target="_blank">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          LinkedIn
+        </a>
+        <a class="social-link" href="https://wa.me/923060130331" target="_blank">💬 WhatsApp</a>
+        <a class="social-link" href="mailto:farooquechanna18@gmail.com">✉ Email</a>
+      </div>
+    </div>
+    <div class="reveal-right">
+      <div class="contact-terminal">
+        <div class="terminal-bar">
+          <div class="tbar-dot red"></div>
+          <div class="tbar-dot yellow"></div>
+          <div class="tbar-dot green"></div>
+          <span class="terminal-title">farooq_ahmed.json</span>
+        </div>
+        <div class="terminal-body">
+          <div class="tline"><span class="tbrace">{</span></div>
+          <div class="tline" style="padding-left:1.5rem"><span class="tkey">"name"</span><span class="tbrace">: </span><span class="tstr">"Farooq Ahmed"</span><span class="tbrace">,</span></div>
+          <div class="tline" style="padding-left:1.5rem"><span class="tkey">"role"</span><span class="tbrace">: </span><span class="tstr">"Python Developer"</span><span class="tbrace">,</span></div>
+          <div class="tline" style="padding-left:1.5rem"><span class="tkey">"location"</span><span class="tbrace">: </span><span class="tstr">"Jamshoro, PK 🇵🇰"</span><span class="tbrace">,</span></div>
+          <div class="tline" style="padding-left:1.5rem"><span class="tkey">"skills"</span><span class="tbrace">: [</span><span class="tstr">"Python"</span><span class="tbrace">, </span><span class="tstr">"Pandas"</span><span class="tbrace">, </span><span class="tstr">"NumPy"</span><span class="tbrace">],</span></div>
+          <div class="tline" style="padding-left:1.5rem"><span class="tkey">"certifications"</span><span class="tbrace">: </span><span class="tval">4</span><span class="tbrace">,</span></div>
+          <div class="tline" style="padding-left:1.5rem"><span class="tkey">"open_to_work"</span><span class="tbrace">: </span><span class="tbool">true</span><span class="tbrace">,</span></div>
+          <div class="tline" style="padding-left:1.5rem"><span class="tkey">"github"</span><span class="tbrace">: </span><span class="tstr">"github.com/farooqchanna"</span><span class="tbrace">,</span></div>
+          <div class="tline" style="padding-left:1.5rem"><span class="tkey">"linkedin"</span><span class="tbrace">: </span><span class="tstr">"farooq-ahmed-1b310a193"</span></div>
+          <div class="tline"><span class="tbrace">}</span></div>
+          <div class="tline" style="margin-top:.8rem"><span class="tprompt">$</span> <span class="tcmd">python hire_farooq.py</span></div>
+          <div class="tline"><span style="color:#22c55e">✓ Great choice. Let's build something.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-brand">FA.</div>
+    <p style="margin-top:.3rem">© 2026 Farooq Ahmed. Built with ❤️ &amp; Python.</p>
+  </div>
+  <div class="footer-links">
+    <a href="#about">About</a>
+    <a href="#projects">Projects</a>
+    <a href="#skills">Skills</a>
+    <a href="#certifications">Certs</a>
+    <a href="#contact">Contact</a>
+  </div>
+</footer>
+
+<script>
+/* ── CURSOR ── */
+const cursor = document.getElementById('cursor');
+const ring   = document.getElementById('cursor-ring');
+let mx=0,my=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX; my=e.clientY;
+  cursor.style.left=mx+'px'; cursor.style.top=my+'px';
+  ring.style.left=mx+'px'; ring.style.top=my+'px';
+});
+document.querySelectorAll('a,button,.filter-btn,.project-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{
+    cursor.style.transform='translate(-50%,-50%) scale(2.5)';
+    cursor.style.background='var(--accent2)';
+    ring.style.width='50px'; ring.style.height='50px';
+    ring.style.borderColor='rgba(245,166,35,.5)';
+  });
+  el.addEventListener('mouseleave',()=>{
+    cursor.style.transform='translate(-50%,-50%) scale(1)';
+    cursor.style.background='var(--accent)';
+    ring.style.width='36px'; ring.style.height='36px';
+    ring.style.borderColor='rgba(0,229,176,.4)';
+  });
+});
+
+/* ── SCROLL PROGRESS ── */
+const pb = document.getElementById('progress-bar');
+window.addEventListener('scroll',()=>{
+  const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+  pb.style.width = pct + '%';
+});
+
+/* ── MOBILE MENU ── */
+function toggleMobile(){
+  document.getElementById('hamburger').classList.toggle('open');
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+function closeMobile(){
+  document.getElementById('hamburger').classList.remove('open');
+  document.getElementById('mobileMenu').classList.remove('open');
+}
+
+/* ── HERO CANVAS PARTICLES ── */
+const canvas = document.getElementById('hero-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function resizeCanvas(){
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+class Particle {
+  constructor(){
+    this.reset();
+  }
+  reset(){
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.vx = (Math.random()-.5)*.3;
+    this.vy = (Math.random()-.5)*.3;
+    this.r = Math.random()*1.5+.5;
+    this.alpha = Math.random()*.5+.1;
+    this.color = Math.random()>.6 ? '0,229,176' : Math.random()>.5 ? '245,166,35' : '124,106,255';
+  }
+  draw(){
+    ctx.beginPath();
+    ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+    ctx.fillStyle = `rgba(${this.color},${this.alpha})`;
+    ctx.fill();
+  }
+  update(){
+    this.x+=this.vx; this.y+=this.vy;
+    if(this.x<0||this.x>canvas.width||this.y<0||this.y>canvas.height) this.reset();
+  }
+}
+
+for(let i=0;i<90;i++) particles.push(new Particle());
+
+// Draw connecting lines
+function drawLines(){
+  for(let i=0;i<particles.length;i++){
+    for(let j=i+1;j<particles.length;j++){
+      const dx=particles[i].x-particles[j].x, dy=particles[i].y-particles[j].y;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<100){
+        ctx.beginPath();
+        ctx.strokeStyle=`rgba(0,229,176,${.06*(1-dist/100)})`;
+        ctx.lineWidth=.5;
+        ctx.moveTo(particles[i].x,particles[i].y);
+        ctx.lineTo(particles[j].x,particles[j].y);
+        ctx.stroke();
+      }
+    }
+  }
+}
+
+function animateParticles(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  drawLines();
+  particles.forEach(p=>{ p.update(); p.draw(); });
+  requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+/* ── TYPEWRITER ── */
+const roles = [
+  'Python Developer',
+  'Data Analyst',
+  'Automation Engineer',
+  'OOP Enthusiast',
+  'Cisco Certified',
+  'Anthropic Trained'
+];
+let ri=0, ci=0, deleting=false, typedEl=document.getElementById('typed');
+function typeWriter(){
+  const current = roles[ri];
+  if(!deleting){
+    typedEl.textContent = current.slice(0,ci+1);
+    ci++;
+    if(ci===current.length){ deleting=true; setTimeout(typeWriter,1800); return; }
+  } else {
+    typedEl.textContent = current.slice(0,ci-1);
+    ci--;
+    if(ci===0){ deleting=false; ri=(ri+1)%roles.length; }
+  }
+  setTimeout(typeWriter, deleting?55:95);
+}
+typeWriter();
+
+/* ── SCROLL REVEAL ── */
+const revealEls = document.querySelectorAll('.reveal,.reveal-left,.reveal-right');
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){
+      setTimeout(()=>e.target.classList.add('visible'), i*60);
+      observer.unobserve(e.target);
+    }
+  });
+},{threshold:.1});
+revealEls.forEach(el=>observer.observe(el));
+
+/* ── SKILL BARS ── */
+const skillObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.skill-fill').forEach(fill=>{
+        fill.style.width = fill.dataset.width + '%';
+      });
+      skillObserver.unobserve(e.target);
+    }
+  });
+},{threshold:.3});
+document.querySelectorAll('.skill-category').forEach(el=>skillObserver.observe(el));
+
+/* ── COUNTER ANIMATION ── */
+const counterObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.counter').forEach(c=>{
+        const target = +c.dataset.target;
+        let count=0, inc=Math.max(1,Math.floor(target/40));
+        const timer = setInterval(()=>{
+          count+=inc;
+          if(count>=target){ c.textContent=target; clearInterval(timer); }
+          else c.textContent=count;
+        },35);
+      });
+      counterObserver.unobserve(e.target);
+    }
+  });
+},{threshold:.5});
+document.querySelectorAll('#stats').forEach(el=>counterObserver.observe(el));
+
+/* ── PROJECT FILTER ── */
+const filterBtns = document.querySelectorAll('.filter-btn');
+const projectCards = document.querySelectorAll('.project-card');
+filterBtns.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    filterBtns.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const filter = btn.dataset.filter;
+    projectCards.forEach(card=>{
+      if(filter==='all'||card.dataset.cat===filter){
+        card.style.display='block';
+        card.style.animation='fadeIn .35s ease forwards';
+      } else {
+        card.style.display='none';
+      }
+    });
+  });
+});
+</script>
+</body>
+</html>
